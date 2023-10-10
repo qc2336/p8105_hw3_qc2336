@@ -1,29 +1,60 @@
 ---
+author: "Qiran Chen"
 title: "p8105_hw3_qc2336"
 output: html_document
 date: "2023-10-10"
 ---
 
-```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE)
+```{r}
+library(tidyverse)
+library(ggplot2)
 ```
 
-## R Markdown
+## Problem 1
 
-This is an R Markdown document. Markdown is a simple formatting syntax for authoring HTML, PDF, and MS Word documents. For more details on using R Markdown see <http://rmarkdown.rstudio.com>.
 
-When you click the **Knit** button a document will be generated that includes both content as well as the output of any embedded R code chunks within the document. You can embed an R code chunk like this:
-
-```{r cars}
-summary(cars)
+```{r}
+library(p8105.datasets)
+data("instacart")
 ```
 
-## Including Plots
+```{r}
+tail(instacart,5)
+summary(instacart)
+instacart|> 
+  count(user_id)
+```
+>> This data has 1384617 observeations. Including 15 variables order id, user id,product d, aisle id departmen id, aisle, department order number, days since prior order, order time, product name and if it is reordered. There are 131209 unique user id in the data.
 
-You can also embed plots, for example:
 
-```{r pressure, echo=FALSE}
-plot(pressure)
+```{r}
+instacart|>
+  count(aisle,name="n_items")|>
+  arrange(desc(n_items))
+
+```
+>> There are 134 aisle in the instacart dataset. The most items order aisle is fresh vegetable.
+
+```{r}
+instacart|>
+  count(aisle,name="n_items")|>
+  filter(n_items>10000)|>
+  mutate(aisle=fct_reorder(aisle,n_items))|>
+  ggplot(aes(x=aisle,y=n_items))+
+  geom_point()+
+  theme(axis.text.x = element_text(angle = 65, vjust = 1, hjust=1))+
+  ggtitle("Number of Items in Each Aisle")
+  
 ```
 
-Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.
+```{r}
+instacart|>
+  filter(aisle==c("baking ingredients", "dog food care", "packaged vegetables fruits"))|>
+  group_by(aisle)|>
+  count(product_name)|>
+  mutate(rank = min_rank(desc(n))) |>
+  filter(rank < 4) |>
+  arrange(desc(n))|>
+  select(-rank)
+```
+
