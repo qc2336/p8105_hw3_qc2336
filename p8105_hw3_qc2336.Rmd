@@ -16,6 +16,7 @@ library(ggplot2)
 ```{r}
 library(p8105.datasets)
 data("instacart")
+data("brfss_smart2010")
 ```
 
 ```{r}
@@ -56,5 +57,22 @@ instacart|>
   filter(rank < 4) |>
   arrange(desc(n))|>
   select(-rank)
+```
+```{r}
+instacart|>
+  filter(product_name==c("Pink Lady Apples", "Coffee Ice Cream"))|>
+  mutate(order_dow=factor(order_dow, labels = c("Monday","Tueday","Wednesday","Thursday","Friday", "Saturday", "Sunday")))|>
+  group_by(product_name,order_dow)|>
+  summarize(mean_time=mean(order_hour_of_day))|>
+  pivot_wider(names_from = order_dow,
+              values_from = mean_time)
+                    
+  
+```
+## Problem 2
+
+```{r}
+brfss_smart2010|>
+  janitor::clean_names()
 ```
 

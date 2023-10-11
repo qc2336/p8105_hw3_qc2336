@@ -372,7 +372,8 @@ display: none;
 <div id="problem-1" class="section level2">
 <h2>Problem 1</h2>
 <pre class="r"><code>library(p8105.datasets)
-data(&quot;instacart&quot;)</code></pre>
+data(&quot;instacart&quot;)
+data(&quot;brfss_smart2010&quot;)</code></pre>
 <pre class="r"><code>tail(instacart,5)</code></pre>
 <pre><code>## # A tibble: 5 × 15
 ##   order_id product_id add_to_cart_order reordered user_id eval_set order_number
@@ -491,6 +492,50 @@ aisle is fresh vegetable.</p>
 ## 7 dog food care              Organix Grain Free Chicken &amp; Vegetable Dog F…    14
 ## 8 dog food care              Organix Chicken &amp; Brown Rice Recipe              13
 ## 9 dog food care              Original Dry Dog                                  9</code></pre>
+<pre class="r"><code>instacart|&gt;
+  filter(product_name==c(&quot;Pink Lady Apples&quot;, &quot;Coffee Ice Cream&quot;))|&gt;
+  mutate(order_dow=factor(order_dow, labels = c(&quot;Monday&quot;,&quot;Tueday&quot;,&quot;Wednesday&quot;,&quot;Thursday&quot;,&quot;Friday&quot;, &quot;Saturday&quot;, &quot;Sunday&quot;)))|&gt;
+  group_by(product_name,order_dow)|&gt;
+  summarize(mean_time=mean(order_hour_of_day))|&gt;
+  pivot_wider(names_from = order_dow,
+              values_from = mean_time)</code></pre>
+<pre><code>## Warning: There was 1 warning in `filter()`.
+## ℹ In argument: `product_name == c(&quot;Pink Lady Apples&quot;, &quot;Coffee Ice Cream&quot;)`.
+## Caused by warning in `product_name == c(&quot;Pink Lady Apples&quot;, &quot;Coffee Ice Cream&quot;)`:
+## ! longer object length is not a multiple of shorter object length</code></pre>
+<pre><code>## `summarise()` has grouped output by &#39;product_name&#39;. You can override using the
+## `.groups` argument.</code></pre>
+<pre><code>## # A tibble: 2 × 8
+## # Groups:   product_name [2]
+##   product_name     Monday Tueday Wednesday Thursday Friday Saturday Sunday
+##   &lt;chr&gt;             &lt;dbl&gt;  &lt;dbl&gt;     &lt;dbl&gt;    &lt;dbl&gt;  &lt;dbl&gt;    &lt;dbl&gt;  &lt;dbl&gt;
+## 1 Coffee Ice Cream   13.2   15        15.3     15.4   15.2     10.3   12.4
+## 2 Pink Lady Apples   12.2   11.7      12       13.9   11.9     13.9   11.6</code></pre>
+</div>
+<div id="problem-2" class="section level2">
+<h2>Problem 2</h2>
+<pre class="r"><code>brfss_smart2010|&gt;
+  janitor::clean_names()</code></pre>
+<pre><code>## # A tibble: 134,203 × 23
+##     year locationabbr locationdesc     class topic question response sample_size
+##    &lt;int&gt; &lt;chr&gt;        &lt;chr&gt;            &lt;chr&gt; &lt;chr&gt; &lt;chr&gt;    &lt;chr&gt;          &lt;int&gt;
+##  1  2010 AL           AL - Jefferson … Heal… Over… How is … Excelle…          94
+##  2  2010 AL           AL - Jefferson … Heal… Over… How is … Very go…         148
+##  3  2010 AL           AL - Jefferson … Heal… Over… How is … Good             208
+##  4  2010 AL           AL - Jefferson … Heal… Over… How is … Fair             107
+##  5  2010 AL           AL - Jefferson … Heal… Over… How is … Poor              45
+##  6  2010 AL           AL - Jefferson … Heal… Fair… Health … Good or…         450
+##  7  2010 AL           AL - Jefferson … Heal… Fair… Health … Fair or…         152
+##  8  2010 AL           AL - Jefferson … Heal… Heal… Do you … Yes              524
+##  9  2010 AL           AL - Jefferson … Heal… Heal… Do you … No                77
+## 10  2010 AL           AL - Jefferson … Heal… Unde… Adults … Yes              316
+## # ℹ 134,193 more rows
+## # ℹ 15 more variables: data_value &lt;dbl&gt;, confidence_limit_low &lt;dbl&gt;,
+## #   confidence_limit_high &lt;dbl&gt;, display_order &lt;int&gt;, data_value_unit &lt;chr&gt;,
+## #   data_value_type &lt;chr&gt;, data_value_footnote_symbol &lt;chr&gt;,
+## #   data_value_footnote &lt;chr&gt;, data_source &lt;chr&gt;, class_id &lt;chr&gt;,
+## #   topic_id &lt;chr&gt;, location_id &lt;chr&gt;, question_id &lt;chr&gt;, respid &lt;chr&gt;,
+## #   geo_location &lt;chr&gt;</code></pre>
 </div>
 
 
