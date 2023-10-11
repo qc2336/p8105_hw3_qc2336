@@ -1,7 +1,7 @@
 ---
 author: "Qiran Chen"
 title: "p8105_hw3_qc2336"
-output: pdf_document
+output: github_document
 date: "2023-10-10"
 ---
 
