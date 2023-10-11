@@ -81,7 +81,25 @@ brfss_smart_df=brfss_smart2010|>
   rename(states_abbrev=locationabbr,
          states_county=locationdesc,
          responde_id=respid)|>
-  
+  filter(topic=="Overall Health")|>
+  filter(response==c("Excellent","Very Good","Good","Fair","Poor"))|>
+  mutate(response=factor(response,
+                         levels=c("Poor","Fair","Good","Very Good","Excellent"),
+                         ordered = TRUE))
+
+brfss_smart_df
 
 ```
+```{r}
 
+brfss_smart_df|>
+  filter(year=="2002")|>
+  count(states_abbrev)|>
+  filter(n>=7)
+
+brfss_smart_df|>
+  filter(year=="2010")|>
+  count(states_abbrev)|>
+  filter(n>=7)
+```
+>> There are 21 states observed in 2002, and 37 states in 2010.
