@@ -50,14 +50,11 @@ instacart|>
 
 ```{r}
 top3_product=instacart|>
-  filter(aisle==c("baking ingredients", "dog food care", "packaged vegetables fruits"))|>
+  filter(aisle==c('baking ingredients', 'dog food care', 'packaged vegetables fruits'))|>
   group_by(aisle)|>
-  count(product_name)|>
-  mutate(rank = min_rank(desc(n))) |>
-  filter(rank < 4) |>
-  arrange(desc(n))|>
-  select(-rank)
-
+  count(product_name, sort=TRUE)|>
+  top_n(3)
+  
 top3_product
 ```
 
@@ -82,10 +79,8 @@ brfss_smart_df=brfss_smart2010|>
          states_county=locationdesc,
          responde_id=respid)|>
   filter(topic=="Overall Health")|>
-  filter(response==c("Excellent","Very Good","Good","Fair","Poor"))|>
   mutate(response=factor(response,
-                         levels=c("Poor","Fair","Good","Very Good","Excellent"),
-                         ordered = TRUE))
+                         levels=c("Poor","Fair","Good","Very good","Excellent")))
 
 brfss_smart_df
 
@@ -94,12 +89,41 @@ brfss_smart_df
 
 brfss_smart_df|>
   filter(year=="2002")|>
-  count(states_abbrev)|>
-  filter(n>=7)
+  group_by(states_abbrev)|>
+  summarize(n_location=n_distinct(states_county))|>
+  filter(n_location >=7)
 
 brfss_smart_df|>
   filter(year=="2010")|>
-  count(states_abbrev)|>
-  filter(n>=7)
+  group_by(states_abbrev)|>
+  summarize(n_location=n_distinct(states_county))|>
+  filter(n_location >=7)
+
 ```
->> There are 21 states observed in 2002, and 37 states in 2010.
+>> There are 6 states observed in 2002, and 14 states in 2010.
+
+```{r}
+brfss_smart_df|>
+  filter(response=="Excellent")|>
+  group_by(year, states_abbrev)|>
+  summarize(mean_data_value=mean(data_value))|>
+  ungroup()|>
+  ggplot(aes(x=year,y=mean_data_value, color=states_abbrev, na.rm= TRUE))+
+  geom_line()+
+  theme(axis.text.x = element_text(angle = 90, vjust = 1, hjust=0.2))+
+  labs( title = "Mean Data Value Overtime within the states") 
+  
+```
+>>This result shows the mean data value over time with in the state.
+
+```{r}
+brfss_smart_df|>
+  filter(year==c("2006","2010"),states_abbrev=="NY")|>
+  ggplot(aes(x=response,y=data_value,color=response))+
+  geom_boxplot(binwidth = 0.5)+
+  facet_grid(.~year)
+  
+  
+  
+```
+
