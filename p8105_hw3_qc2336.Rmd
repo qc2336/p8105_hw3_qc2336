@@ -49,7 +49,7 @@ instacart|>
 ```
 
 ```{r}
-instacart|>
+top3_product=instacart|>
   filter(aisle==c("baking ingredients", "dog food care", "packaged vegetables fruits"))|>
   group_by(aisle)|>
   count(product_name)|>
@@ -57,22 +57,31 @@ instacart|>
   filter(rank < 4) |>
   arrange(desc(n))|>
   select(-rank)
+
+top3_product
 ```
+
+
 ```{r}
-instacart|>
+coffee_apple=instacart|>
   filter(product_name==c("Pink Lady Apples", "Coffee Ice Cream"))|>
   mutate(order_dow=factor(order_dow, labels = c("Monday","Tueday","Wednesday","Thursday","Friday", "Saturday", "Sunday")))|>
   group_by(product_name,order_dow)|>
   summarize(mean_time=mean(order_hour_of_day))|>
   pivot_wider(names_from = order_dow,
               values_from = mean_time)
-                    
+coffee_apple
   
 ```
 ## Problem 2
 
 ```{r}
-brfss_smart2010|>
-  janitor::clean_names()
+brfss_smart_df=brfss_smart2010|>
+  janitor::clean_names()|>
+  rename(states_abbrev=locationabbr,
+         states_county=locationdesc,
+         responde_id=respid)|>
+  
+
 ```
 
