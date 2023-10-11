@@ -50,7 +50,7 @@ instacart|>
 
 ```{r}
 top3_product=instacart|>
-  filter(aisle==c('baking ingredients', 'dog food care', 'packaged vegetables fruits'))|>
+  filter(aisle%in%c('baking ingredients', 'dog food care', 'packaged vegetables fruits'))|>
   group_by(aisle)|>
   count(product_name, sort=TRUE)|>
   top_n(3)
