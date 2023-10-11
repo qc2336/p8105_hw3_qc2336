@@ -54,6 +54,7 @@ top3_product=instacart|>
   group_by(aisle)|>
   count(product_name, sort=TRUE)|>
   top_n(3)
+
   
 top3_product
 ```
@@ -126,4 +127,35 @@ brfss_smart_df|>
   
   
 ```
+
+
+## Problem 3
+
+
+```{r}
+covar<-read_csv("./nhanes_covar.csv",skip=4)
+accel<-read_csv("./nhanes_accel.csv")
+```
+
+```{r}
+covar=covar|>
+  drop_na()|>
+  filter(age>=21)|>
+  mutate(education=factor(education,labels=c("Less than High School", "High School", "More than High School")),
+         sex=factor(sex,labels=c("male","female")))
+covar
+```
+
+```{r}
+covar|>
+  group_by(education)|>
+  count(sex)
+covar|>
+ggplot(aes(x=sex,y=age,color=sex))+
+  geom_boxplot()+
+  facet_grid(.~education)+
+  ggtitle("Age Distribution of Male and Female in Different Education Levels")
+```
+>> The table shows there are more male and female who has a more than high school, the age distribution shows they are younger in age. Male and Female who had less than high school and high school education are relatively similar in number.The mean age of Less than high school is older than the other two. The high school education male and female has a more salient difference in age.
+
 
